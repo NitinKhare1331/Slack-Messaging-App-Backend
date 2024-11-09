@@ -38,3 +38,9 @@ userSchema.pre('save', function saveUser(next){
 const User = mongoose.model('User', userSchema);
 
 export default User;
+
+/*
+In Mongoose, the .pre() method is used to define middleware that runs before a particular action is executed on a Mongoose model. Middleware functions in Mongoose allow you to hook into various stages of the model lifecycle, such as saving, validating, removing, or updating documents.
+
+The .pre() method is used specifically to register a function that should be run before a certain event, like save, validate, remove, or update. These middleware functions allow you to modify data or perform other actions before the main operation happens.
+*/

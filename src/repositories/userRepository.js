@@ -1,13 +1,37 @@
-export const getUserByEmail = (email) => {};
+import User from '../models/user.js';
+import crudRepository from './crudRepository.js';
 
-export const getUserByName = (name) => {};
+const userRepository = {
+    ...crudRepository(User),
 
-export const createUser = (user) => {};
+    getByEmail: async function (email) {
+        const user = await User.findOne({ email }) ;
+        return user;
+    },
 
-export const getUsers = () => {};
+    getByUsername: async function (username) {
+        const user = await User.findOne({ username });
+        return user;
+    }
+};
 
-export const getUserById = (id) => {};
+export default userRepository;
 
-export const deleteUser = (id) => {};
 
-export const updateUser = (id, user) => {};
+
+
+
+
+// export const getUserByEmail = (email) => {};
+
+// export const getUserByName = (name) => {};
+
+// export const createUser = (user) => {};
+
+// export const getUsers = () => {};
+
+// export const getUserById = (id) => {};
+
+// export const deleteUser = (id) => {};
+
+// export const updateUser = (id, user) => {};
