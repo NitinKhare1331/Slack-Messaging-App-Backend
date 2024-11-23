@@ -19,6 +19,12 @@ const isUserAdminOfWorkspace = (workspace, userId) => {
   return response;
 };
 
+export const isUserMemberOfWorkspace = (workspace, userId) => {
+  return workspace.members.find(
+    (member) => member.memberId.toString() === userId
+  );
+};
+
 export const createWorkspaceService = async (workspaceData) => {
     try {
       const joinCode = uuidv4().substring(0, 6).toUpperCase();
@@ -84,7 +90,7 @@ export const deleteWorkspaceService = async (workspaceId, userId) => {
       });
     }
     console.log(workspace.members, userId);
-    
+
     const isAllowed = isUserAdminOfWorkspace(workspace, userId);
     //   const channelIds = workspace.channels.map((channel) => channel._id);
 
@@ -105,6 +111,60 @@ export const deleteWorkspaceService = async (workspaceId, userId) => {
   }
 };
 
+export const getWorkspaceService = async (workspaceId, userId) => {
+  try {
+    const workspace = await workspaceRepository.getById(workspaceId);
+    if (!workspace) {
+      throw new ClientError({
+        explanation: 'Invalid data sent from the client',
+        message: 'Workspace not found',
+        statusCode: StatusCodes.NOT_FOUND
+      });
+    }
+    const isMember = isUserMemberOfWorkspace(workspace, userId);
+    if (!isMember) {
+      throw new ClientError({
+        explanation: 'User is not a member of the workspace',
+        message: 'User is not a member of the workspace',
+        statusCode: StatusCodes.UNAUTHORIZED
+      });
+    }
+    return workspace;
+  } catch (error) {
+    console.log('Get workspace service error', error);
+    throw error;
+  }
+};
+
+export const getWorkspaceByJoinCodeService = async (joinCode, userId) => {
+  try {
+    const workspace = await workspaceRepository.getWorkspaceByJoinCode(joinCode);
+
+    if(!workspace) {
+      throw new ClientError({
+          explanation: 'Invalid data sent from the client',
+          message: 'Workspace not found',
+          statusCode: StatusCodes.NOT_FOUND
+      });
+    }
+
+    const isMember = await isUserMemberOfWorkspace(workspace, userId);
+
+    if(!isMember) {
+      throw new ClientError({
+          explanation: 'User is not a member of the workspace',
+          message: 'User is not a member of the workspace',
+          statusCode: StatusCodes.UNAUTHORIZED
+      });
+    }
+
+    return workspace;
+
+  } catch (error) {
+    console.log('Get workspace by join code service error', error);
+    throw error;
+  }
+}
 
 
 //UUID -> Universally Unique Identifier (128-bit value, 36 character)
