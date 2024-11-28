@@ -13,9 +13,11 @@ export const createWorkspaceController = async (req, res) => {
         ...req.body,
         owner: req.user
       });
+      
       return res
         .status(StatusCodes.CREATED)
         .json(successResponse(response, 'Workspace created successfully'));
+
     } catch (error) {
       console.log(error);
       if (error.statusCode) {
