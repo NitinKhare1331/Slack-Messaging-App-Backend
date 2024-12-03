@@ -15,7 +15,7 @@ export const getChannelByIdController = async (req, res) => {
       req.params.channelId,
       req.user
     );
-    console.log(response);
+    console.log('Channel', response);
     
     return res
       .status(StatusCodes.OK)
