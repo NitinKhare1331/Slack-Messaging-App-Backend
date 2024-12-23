@@ -8,6 +8,7 @@ import {
     getWorkspaceByJoinCodeController, 
     getWorkspaceController, 
     getWorkspacesUserIsMemberOfController, 
+    resetJoinCodeController, 
     updateWorkspaceController} from '../../controllers/workspaceController.js';
 import { isAuthenticated } from '../../middlewares/authMiddleware.js';
 import { addChannelToWorkspaceSchema, addMemberToWorkspaceSchema, createWorkspaceSchema } from '../../validators/workspaceSchema.js';
@@ -30,5 +31,7 @@ router.put('/:workspaceId', isAuthenticated, updateWorkspaceController);
 router.put('/:workspaceId/members', isAuthenticated, validate(addMemberToWorkspaceSchema), addMemberToWorkspaceController);
 
 router.put('/:workspaceId/channels', isAuthenticated, validate(addChannelToWorkspaceSchema), addChannelToWorkspaceController);
+
+router.put('/:workspaceId/joinCode/reset', isAuthenticated, resetJoinCodeController);
 
 export default router;
