@@ -8,6 +8,7 @@ import {
     getWorkspaceByJoinCodeController, 
     getWorkspaceController, 
     getWorkspacesUserIsMemberOfController, 
+    joinWorkspaceController, 
     resetJoinCodeController, 
     updateWorkspaceController} from '../../controllers/workspaceController.js';
 import { isAuthenticated } from '../../middlewares/authMiddleware.js';
@@ -25,6 +26,8 @@ router.delete('/:workspaceId', isAuthenticated, deleteWorkspaceController);
 router.get('/:workspaceId', isAuthenticated, getWorkspaceController);
 
 router.get('/join/:joinCode', isAuthenticated, getWorkspaceByJoinCodeController);
+
+router.put('/:workspaceId/join', isAuthenticated, joinWorkspaceController);
 
 router.put('/:workspaceId', isAuthenticated, updateWorkspaceController);
 
