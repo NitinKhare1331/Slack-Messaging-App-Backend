@@ -17,7 +17,6 @@ export const isUserAdminOfWorkspace = (workspace, userId) => {
         member.memberId._id.toString() === userId) &&
       member.role === 'admin'
   );
-  console.log(response);
   return response;
 };
 

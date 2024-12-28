@@ -9,8 +9,6 @@ import { isUserAdminOfWorkspace, isUserMemberOfWorkspace } from './workspaceServ
 export const getChannelByIdService = async (channelId, userId) => {
   try {
     const channel = await channelRepository.getChannelWithWorkspaceDetails(channelId);
-
-    console.log('channel data is',channel);
     
     if (!channel || !channel.workspaceId) {
       throw new ClientError({
