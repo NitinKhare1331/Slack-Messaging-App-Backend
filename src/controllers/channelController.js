@@ -1,7 +1,7 @@
 
 import { StatusCodes } from 'http-status-codes';
 
-import { getChannelByIdService } from '../service/channelService.js';
+import { getChannelByIdService, updateChannelService } from '../service/channelService.js';
 import {
   customErrorResponse,
   internalErrorResponse,
@@ -32,3 +32,27 @@ export const getChannelByIdController = async (req, res) => {
       .json(internalErrorResponse(error));
   }
 };
+
+export const updateChannelController = async (req, res) => {
+  try {
+    const response = await updateChannelService(
+      req.params.channelId,
+      req.body,
+      req.user
+    );
+    console.log('Channel', response);
+    
+    return res
+      .status(StatusCodes.OK)
+      .json(successResponse(response, 'Channel updated successfully'));
+  } catch (error) {
+    console.log('update channel controller error', error);
+    if (error.statusCode) {
+      return res.status(error.statusCode).json(customErrorResponse(error));
+    }
+
+    return res
+      .status(StatusCodes.INTERNAL_SERVER_ERROR)
+      .json(internalErrorResponse(error));
+  }
+}

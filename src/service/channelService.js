@@ -4,7 +4,7 @@ import { StatusCodes } from 'http-status-codes';
 import channelRepository from '../repositories/channelRepository.js';
 import messageRepository from '../repositories/messageRepository.js';
 import ClientError from '../utils/errors/clientError.js';
-import { isUserMemberOfWorkspace } from './workspaceService.js';
+import { isUserAdminOfWorkspace, isUserMemberOfWorkspace } from './workspaceService.js';
 
 export const getChannelByIdService = async (channelId, userId) => {
   try {
@@ -46,7 +46,42 @@ export const getChannelByIdService = async (channelId, userId) => {
     };
 
   } catch (error) {
-    console.log('Get channel by service error', error);
+    console.log('Get channel service error', error);
+    throw error;
+  }
+}
+
+export const updateChannelService = async (channelId, channelData, userId) => {
+  try {
+    const channel = await channelRepository.getChannelWithWorkspaceDetails(channelId);
+
+    if (!channel || !channel.workspaceId) {
+      throw new ClientError({
+        message: 'Channel not found with the provided ID',
+        explanation: 'Invalid data sent from the client',
+        statusCode: StatusCodes.NOT_FOUND
+      });
+    }
+
+    const isAdmin = isUserAdminOfWorkspace(channel.workspaceId, userId);
+
+    if (!isAdmin) {
+      throw new ClientError({
+        message:'User is not a admin of the workspace and hence cannot update the channel',
+        explanation: 'User is not a admin of the workspace',
+        statusCode: StatusCodes.UNAUTHORIZED
+      });
+    }
+
+    const updatedChannel = await channelRepository.update(
+      channelId,
+      channelData
+    );
+
+    return updatedChannel;
+
+  } catch (error) {
+    console.log('Update channel service error', error);
     throw error;
   }
 }

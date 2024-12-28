@@ -9,7 +9,7 @@ import { workspaceJoinMail } from '../utils/common/mailObject.js';
 import ClientError from '../utils/errors/clientError.js';
 import ValidationError from '../utils/errors/validationError.js'
 
-const isUserAdminOfWorkspace = (workspace, userId) => {
+export const isUserAdminOfWorkspace = (workspace, userId) => {
   console.log(workspace.members, userId);
   const response = workspace.members.find(
     (member) =>
