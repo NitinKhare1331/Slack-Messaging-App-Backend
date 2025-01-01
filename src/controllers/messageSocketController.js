@@ -10,8 +10,10 @@ export default function messageHandlers(io, socket) {
         const { channelId } = data;
         const messageResponse = await createMessageService(data);
         // socket.broadcast.emit(NEW_MESSAGE_RECEIVED_EVENT, messageResponse);
+        console.log("channel" , channelId);
+        
         io.to(channelId).emit(NEW_MESSAGE_RECEIVED_EVENT, messageResponse); //Implementation of rooms
-        cb({
+        cb?.({
             success: true,
             message: 'Successfully created the message',
             data: messageResponse
